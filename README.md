@@ -1,14 +1,18 @@
-# Welcome to your Lovable project
+# Olive Response Bot
+
+create a smart email generator that respond to all email received in my olieve company .use a formal ,informal ,persuasive tone adpting to Adapt content based on audience (client, manager, team). when responding to the mails acknowledge the mail and inform the send that feedback will be given within 24 hours.
 
 This project was built with [Lovable](https://lovable.dev).
 
+**Live app**: https://smart-email-sidekick.lovable.app
+
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/d8a7b30d-a33d-4661-b900-c4a7a40a60af).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +24,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
