@@ -39,8 +39,10 @@ export const generateReply = createServerFn({ method: "POST" })
         "Never invent prices, stock levels, order numbers or commitments beyond the 24-hour feedback promise.",
         `Tone: ${toneGuide}`,
         `Audience: ${audienceGuide}`,
+        `Priority: ${URGENCY_NOTE[urgency]}`,
         "Output only the email itself, starting with a 'Subject:' line, then the body. No commentary, no markdown formatting.",
       ].join("\n"),
+
       prompt: [
         data.senderName ? `Sender name: ${data.senderName}` : "Sender name: unknown",
         data.yourName ? `Reply signed by: ${data.yourName}` : "Reply signed by: The Team, Olive Company",
