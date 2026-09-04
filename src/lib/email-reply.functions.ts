@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { streamText } from "ai";
 import { z } from "zod";
+import { detectUrgency, URGENCY_NOTE } from "./urgency";
 
 const Input = z.object({
   email: z.string().min(1),
@@ -25,6 +26,8 @@ export const generateReply = createServerFn({ method: "POST" })
       team: "The reader is an internal colleague or team member. Be collaborative and practical, focus on actions, owners and timelines.",
     }[data.audience];
 
+    const urgency = detectUrgency(data.email);
+
     const toneGuide = {
       formal: "Formal, professional and polished. Full sentences, courteous salutation and sign-off, no slang or contractions.",
       informal: "Friendly, relaxed and human. Short sentences, light contractions, still respectful and professional.",
@@ -39,8 +42,10 @@ export const generateReply = createServerFn({ method: "POST" })
         "Never invent prices, stock levels, order numbers or commitments beyond the 24-hour feedback promise.",
         `Tone: ${toneGuide}`,
         `Audience: ${audienceGuide}`,
+        `Priority: ${URGENCY_NOTE[urgency]}`,
         "Output only the email itself, starting with a 'Subject:' line, then the body. No commentary, no markdown formatting.",
       ].join("\n"),
+
       prompt: [
         data.senderName ? `Sender name: ${data.senderName}` : "Sender name: unknown",
         data.yourName ? `Reply signed by: ${data.yourName}` : "Reply signed by: The Team, Olive Company",
@@ -50,5 +55,5 @@ export const generateReply = createServerFn({ method: "POST" })
       ].join("\n"),
     });
 
-    return { reply: await result.text };
+    return { reply: await result.text, urgency };
   });

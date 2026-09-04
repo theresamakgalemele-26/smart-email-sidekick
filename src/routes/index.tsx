@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { generateReply } from "@/lib/email-reply.functions";
+import { detectUrgency, URGENCY_LABEL, type Urgency } from "@/lib/urgency";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -57,6 +58,22 @@ function Index() {
     }
   }
 
+  const urgency: Urgency = email.trim() ? detectUrgency(email) : "normal";
+  const priorityStyles: Record<Urgency, { box: string; badge: string; note: string }> = {
+    urgent: {
+      box: "border-urgent bg-urgent-soft",
+      badge: "bg-urgent text-urgent-foreground",
+      note: "Treat this as urgent - reply first.",
+    },
+    important: {
+      box: "border-important bg-important-soft",
+      badge: "bg-important text-important-foreground",
+      note: "Marked very important - handle with priority.",
+    },
+    normal: { box: "border-border bg-card", badge: "bg-muted text-muted-foreground", note: "" },
+  };
+  const priority = priorityStyles[urgency];
+
   const chip = (active: boolean) =>
     `rounded-full border px-4 py-1.5 text-sm capitalize transition-colors ${
       active
@@ -84,10 +101,18 @@ function Index() {
 
       <section className="mx-auto grid max-w-5xl gap-6 px-6 py-10 md:grid-cols-2">
         <div
-          className="rounded-2xl border border-border bg-card p-6"
+          className={`rounded-2xl border p-6 transition-colors ${priority.box}`}
           style={{ boxShadow: "var(--shadow-soft)" }}
         >
-          <h2 className="text-lg font-semibold text-card-foreground">Email received</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-semibold text-card-foreground">Email received</h2>
+            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${priority.badge}`}>
+              {URGENCY_LABEL[urgency]}
+            </span>
+          </div>
+          {priority.note && (
+            <p className="mt-2 text-sm font-medium text-card-foreground">{priority.note}</p>
+          )}
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <input
@@ -145,7 +170,7 @@ function Index() {
         </div>
 
         <div
-          className="rounded-2xl border border-border bg-card p-6"
+          className={`rounded-2xl border p-6 transition-colors ${priority.box}`}
           style={{ boxShadow: "var(--shadow-soft)" }}
         >
           <div className="flex items-center justify-between">
