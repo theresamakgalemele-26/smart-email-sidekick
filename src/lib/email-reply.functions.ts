@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { streamText } from "ai";
 import { z } from "zod";
+import { detectUrgency, URGENCY_NOTE } from "./urgency";
 
 const Input = z.object({
   email: z.string().min(1),
@@ -24,6 +25,8 @@ export const generateReply = createServerFn({ method: "POST" })
       manager: "The reader is a manager or senior stakeholder. Be concise, structured, results-focused, and mention next steps and ownership clearly.",
       team: "The reader is an internal colleague or team member. Be collaborative and practical, focus on actions, owners and timelines.",
     }[data.audience];
+
+    const urgency = detectUrgency(data.email);
 
     const toneGuide = {
       formal: "Formal, professional and polished. Full sentences, courteous salutation and sign-off, no slang or contractions.",
@@ -52,5 +55,5 @@ export const generateReply = createServerFn({ method: "POST" })
       ].join("\n"),
     });
 
-    return { reply: await result.text };
+    return { reply: await result.text, urgency };
   });
